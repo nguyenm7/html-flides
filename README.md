@@ -2,7 +2,16 @@
 
 Import HTML slide decks into Figma Design as editable 1920x1080 frames.
 
-## Quick Start
+## Compatibility
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| Claude Code | Works | Full support via Figma MCP |
+| Claude Cowork | Not yet | Figma MCP OAuth not supported in Cowork ([tracking](https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/)) |
+
+The plugin structure is Cowork-ready (skills format, marketplace manifest). It will work in Cowork as soon as the Figma MCP server supports Cowork's auth flow — no code changes needed.
+
+## Quick Start (Claude Code)
 
 ```
 1. claude --plugin-dir /path/to/html-flides/plugin
@@ -41,6 +50,7 @@ html-flides imports into Figma Design. See [docs/figma-slides-guide.md](docs/fig
 
 ## Known Limitations
 
+- **Claude Cowork not supported yet** — the Figma MCP server's OAuth flow doesn't work in Cowork. Plugin is structurally ready; blocked on Figma/Cowork MCP auth support.
 - Imports into Figma Design (not Figma Slides directly)
 - Charts render as raster images
 - External assets (relative CSS/images) are not copied — decks should be self-contained
