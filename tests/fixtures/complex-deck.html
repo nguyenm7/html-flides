@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Complex Deck</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+<style>
+  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; }
+  .slide.active { opacity: 1; }
+  @keyframes fadeUp { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div id="deck">
+  <div class="slide active" data-slide="0"><h1>Title Slide</h1></div>
+  <div class="slide" data-slide="1"><h2>Executive Summary</h2></div>
+  <div class="slide" data-slide="2"><h2>Introduction</h2></div>
+  <div class="slide" data-slide="3"><h2>Problem</h2></div>
+  <div class="slide" data-slide="4"><h2>Impact</h2></div>
+  <div class="slide" data-slide="5"><h2>Blind Spots</h2></div>
+  <div class="slide" data-slide="6"><h2>Root Cause</h2></div>
+  <div class="slide" data-slide="7"><h2>Solution</h2></div>
+  <div class="slide" data-slide="8"><h2>Platform</h2></div>
+  <div class="slide" data-slide="9"><h2>Validation</h2><canvas id="chart-1" data-chart="{}"></canvas></div>
+  <div class="slide" data-slide="10"><h2>Recommendation</h2></div>
+  <div class="slide" data-slide="11"><h2>Appendix</h2></div>
+</div>
+<nav class="nav"><button>Prev</button><span id="counter">1/12</span><button>Next</button></nav>
+<div class="format-toolbar" id="formatToolbar"><button>B</button></div>
+<div id="progress" style="width:8%"></div>
+<div class="watermark">Draft</div>
+<div data-watermark>Watermark</div>
+<div data-fixed-brand>Brand</div>
+</body>
+</html>
