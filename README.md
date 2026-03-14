@@ -1,0 +1,55 @@
+# html-flides
+
+Import HTML slide decks into Figma Design as editable 1920x1080 frames.
+
+## Quick Start
+
+```
+1. claude --plugin-dir /path/to/html-flides/plugin
+2. /mcp  → authenticate Figma
+3. /html-flides:import /path/to/deck.html
+4. /html-flides:qa <figma-url>
+```
+
+## Supported Formats
+
+| Format | Selector |
+|--------|----------|
+| Claude / enterpret-slides | `[data-slide]` (default) |
+| Reveal.js | `--selector '.reveal .slides > section'` |
+| Remark | `--selector '.remark-slide-container'` |
+| Marp | `--selector 'section'` |
+| Custom | `--selector 'your-selector'` |
+
+## How It Works
+
+1. **`prepare()`** transforms the deck HTML before capture:
+   - Kills animations and transitions
+   - Strips Content Security Policy headers
+   - Injects capture mode — isolates one slide per URL param at 1920x1080
+   - Injects the Figma capture script
+
+2. **`selfTest()`** validates the prepared HTML before touching Figma, catching selector mismatches and slide count issues early.
+
+3. **Sequential capture loop** — one slide per browser tab, auto-closed after capture, keeping Figma's import pipeline clean.
+
+4. **QA command** — verifies all imported frame dimensions in Figma are exactly 1920x1080.
+
+## Getting into Figma Slides
+
+html-flides imports into Figma Design. See [docs/figma-slides-guide.md](docs/figma-slides-guide.md) for instructions on moving your frames into a Figma Slides presentation.
+
+## Known Limitations
+
+- Imports into Figma Design (not Figma Slides directly)
+- Charts render as raster images
+- External assets (relative CSS/images) are not copied — decks should be self-contained
+- `window.close()` may be blocked by some browsers
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT
