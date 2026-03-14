@@ -1,6 +1,8 @@
 # html-flides
 
-Import HTML slide decks into Figma Design as editable 1920x1080 frames.
+Turn any HTML slide deck into editable Figma Slides.
+
+A Claude Code plugin that imports HTML presentations into Figma Design as pixel-perfect 1920x1080 frames — ready to copy into Figma Slides.
 
 ## Compatibility
 
