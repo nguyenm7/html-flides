@@ -1,5 +1,6 @@
 ---
-description: Import a local HTML slide deck into Figma Design as editable 1920x1080 frames. Usage: /html-flides:import /path/to/deck.html [--selector 'CSS selector']
+name: import
+description: Import a local HTML slide deck into Figma Design as editable 1920x1080 frames. Use when the user says "import deck", "import slides to figma", "html to figma", or provides an HTML file path to import. Usage: /html-flides:import /path/to/deck.html [--selector 'CSS selector']
 ---
 
 # HTML Deck Import

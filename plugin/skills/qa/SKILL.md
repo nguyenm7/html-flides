@@ -1,5 +1,6 @@
 ---
-description: QA an imported Figma deck for frame sizes, wrapper drift, and visual fidelity. Usage: /html-flides:qa <figma-file-url>
+name: qa
+description: QA an imported Figma deck for frame sizes, wrapper drift, and visual fidelity. Use when the user says "qa import", "check figma import", "verify slides", or provides a Figma URL to verify. Usage: /html-flides:qa <figma-file-url>
 ---
 
 # QA Imported Deck
