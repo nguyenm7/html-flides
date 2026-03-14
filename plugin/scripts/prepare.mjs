@@ -120,13 +120,26 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(1);
   }
 
-  prepare(sourcePath, { selector, dryRun })
-    .then(result => {
-      console.log(`Prepared ${result.slideCount} slides → ${result.relativeUrl}`);
-      if (dryRun) console.log('(dry run — no file written)');
-    })
-    .catch(err => {
-      console.error(err.message);
-      process.exit(1);
-    });
+  import('./self-test.mjs').then(({ selfTest }) => {
+    prepare(sourcePath, { selector, dryRun })
+      .then(result => {
+        const validation = selfTest(result.html, result.slideCount, result.selector);
+        if (!validation.valid) {
+          console.error('Self-test FAILED:');
+          validation.errors.forEach(e => console.error(`  - ${e}`));
+          process.exit(1);
+        }
+        console.log(JSON.stringify({
+          slideCount: result.slideCount,
+          relativeUrl: result.relativeUrl,
+          selector: result.selector,
+          selfTest: 'passed',
+        }, null, 2));
+        if (dryRun) console.log('(dry run — no file written)');
+      })
+      .catch(err => {
+        console.error(err.message);
+        process.exit(1);
+      });
+  });
 }

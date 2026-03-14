@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { prepare } from '../plugin/scripts/prepare.mjs';
+import { selfTest } from '../plugin/scripts/self-test.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const fixture = (name) => join(__dirname, 'fixtures', name);
@@ -99,5 +100,51 @@ describe('prepare', () => {
       const result = await prepare(fixture('revealjs-deck.html'), { selector: '.reveal .slides > section', dryRun: true });
       expect(result.selector).toBe('.reveal .slides > section');
     });
+  });
+});
+
+describe('selfTest', () => {
+  it('passes for valid prepared minimal deck', async () => {
+    const { html, slideCount, selector } = await prepare(fixture('minimal-deck.html'), { dryRun: true });
+    const result = selfTest(html, slideCount, selector);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
+  it('passes for valid prepared complex deck', async () => {
+    const { html, slideCount, selector } = await prepare(fixture('complex-deck.html'), { dryRun: true });
+    const result = selfTest(html, slideCount, selector);
+    expect(result.valid).toBe(true);
+  });
+
+  it('passes for custom selector deck', async () => {
+    const { html, slideCount, selector } = await prepare(
+      fixture('revealjs-deck.html'),
+      { selector: '.reveal .slides > section', dryRun: true }
+    );
+    const result = selfTest(html, slideCount, selector);
+    expect(result.valid).toBe(true);
+  });
+
+  it('fails when capture script is missing', async () => {
+    const { html, slideCount, selector } = await prepare(fixture('minimal-deck.html'), { dryRun: true });
+    const broken = html.replace(/mcp\.figma\.com\/mcp\/html-to-design\/capture\.js/g, 'removed.js');
+    const result = selfTest(broken, slideCount, selector);
+    expect(result.valid).toBe(false);
+    expect(result.errors.some(e => e.toLowerCase().includes('capture script'))).toBe(true);
+  });
+
+  it('fails when animation kill is missing', async () => {
+    const { html, slideCount, selector } = await prepare(fixture('minimal-deck.html'), { dryRun: true });
+    const broken = html.replace(/transition: none !important/g, '').replace(/animation: none !important/g, '');
+    const result = selfTest(broken, slideCount, selector);
+    expect(result.valid).toBe(false);
+    expect(result.errors.some(e => e.toLowerCase().includes('animation'))).toBe(true);
+  });
+
+  it('returns slideCount in result', async () => {
+    const { html, slideCount, selector } = await prepare(fixture('minimal-deck.html'), { dryRun: true });
+    const result = selfTest(html, slideCount, selector);
+    expect(result.slideCount).toBe(3);
   });
 });
