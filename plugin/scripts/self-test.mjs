@@ -1,5 +1,12 @@
-import { parseHTML } from 'linkedom';
 import { captureMode } from './capture-mode.mjs';
+
+let parseHTML;
+try {
+  ({ parseHTML } = await import('linkedom'));
+} catch {
+  console.error('Error: Missing dependency "linkedom". Run: npm install linkedom');
+  process.exit(1);
+}
 
 /**
  * Validate prepared HTML before Figma import.
@@ -37,9 +44,13 @@ export function selfTest(html, slideCount, selector) {
     const { document } = parseHTML(html);
     captureMode(document, idx, selector);
 
-    const remaining = document.querySelectorAll(selector);
-    if (remaining.length !== 1) {
-      errors.push(`Slide ${idx}: found ${remaining.length} slides in DOM, expected 1`);
+    // After captureMode, body is rebuilt as: wrapper > cloned slide.
+    // Descendant selectors (e.g. '.reveal .slides > section') won't match
+    // because ancestors are gone. Verify structure instead.
+    const wrapper = document.body.firstElementChild;
+    if (!wrapper || wrapper.children.length !== 1) {
+      const childCount = wrapper ? wrapper.children.length : 0;
+      errors.push(`Slide ${idx}: wrapper has ${childCount} children, expected 1`);
     }
 
     const chrome = ['.nav', '.format-toolbar', '#progress', '.watermark', '[data-watermark]', '[data-fixed-brand]'];

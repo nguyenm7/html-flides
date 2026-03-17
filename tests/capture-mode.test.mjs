@@ -45,7 +45,10 @@ describe('captureMode', () => {
       const html = await fixture('revealjs-deck.html');
       const doc = dom(html);
       captureMode(doc, 1, '.reveal .slides > section');
-      expect(doc.querySelectorAll('.reveal .slides > section').length).toBe(1);
+      // After captureMode, body is rebuilt: wrapper > cloned section.
+      // The ancestor .reveal/.slides are gone, so query the cloned element directly.
+      expect(doc.querySelectorAll('section').length).toBe(1);
+      expect(doc.body.children.length).toBe(1); // single wrapper div
     });
 
     it('works with .page selector', async () => {

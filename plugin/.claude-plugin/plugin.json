@@ -1,7 +1,7 @@
 {
   "name": "html-flides",
   "description": "Import HTML slide decks into Figma Design as editable 1920x1080 frames via Figma MCP.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": { "name": "Michael Nguyen" },
   "homepage": "https://github.com/nguyenm7/html-flides",
   "repository": "https://github.com/nguyenm7/html-flides",

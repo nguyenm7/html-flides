@@ -7,30 +7,29 @@
  * @param {string} selector - CSS selector that identifies slide elements
  */
 export function captureMode(document, slideIndex, selector) {
-  // 1. Find all slides by selector
-  const slides = Array.from(document.querySelectorAll(selector));
+  // 1. Find target slide by selector and DOM order
+  var slides = Array.from(document.querySelectorAll(selector));
+  var target = slides[slideIndex];
+  if (!target) return;
 
-  // 2. Remove all except target (by DOM order index)
-  slides.forEach((slide, i) => {
-    if (i !== slideIndex) slide.remove();
-  });
+  // 2. Clone the target slide
+  var clone = target.cloneNode(true);
 
-  // 3. Force target dimensions
-  const target = document.querySelector(selector);
-  if (target) {
-    target.style.cssText = 'position:relative!important;width:1920px!important;height:1080px!important;opacity:1!important;transform:none!important;overflow:hidden!important;';
-    if (target.parentElement) {
-      target.parentElement.style.cssText = 'width:1920px!important;height:1080px!important;overflow:hidden!important;';
-    }
-  }
+  // 3. Nuke the entire body — remove ALL children
+  while (document.body.firstChild) document.body.removeChild(document.body.firstChild);
 
-  // 4. Force document dimensions
-  document.documentElement.style.cssText = 'width:1920px!important;height:1080px!important;overflow:hidden!important;';
-  document.body.style.cssText = 'width:1920px!important;height:1080px!important;overflow:hidden!important;margin:0!important;padding:0!important;';
+  // 4. Create a clean wrapper at exactly 1920x1080
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'width:1920px;height:1080px;overflow:hidden;position:relative;margin:0;padding:0;';
 
-  // 5. Remove UI chrome
-  const removeSelectors = ['.nav', '.format-toolbar', '#progress', '.watermark', '[data-watermark]', '[data-fixed-brand]'];
-  removeSelectors.forEach(sel => {
-    document.querySelectorAll(sel).forEach(el => el.remove());
-  });
+  // 5. Force slide dimensions and clip
+  clone.style.cssText = 'position:relative;width:1920px;height:1080px;overflow:hidden;clip-path:inset(0);opacity:1;transform:none;display:block;';
+
+  // 6. Assemble: wrapper > slide
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  // 7. Force document dimensions
+  document.documentElement.style.cssText = 'width:1920px;height:1080px;overflow:hidden;margin:0;padding:0;';
+  document.body.style.cssText = 'width:1920px;height:1080px;overflow:hidden;margin:0;padding:0;';
 }

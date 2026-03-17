@@ -1,8 +1,19 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { basename, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseHTML } from 'linkedom';
 import { captureMode } from './capture-mode.mjs';
+
+let parseHTML;
+try {
+  ({ parseHTML } = await import('linkedom'));
+} catch {
+  console.error(
+    'Error: Missing dependency "linkedom".\n' +
+    'Run: cd "${CLAUDE_PLUGIN_ROOT}" && npm install linkedom\n' +
+    'Or from the plugin cache: npm install linkedom --prefix "$(dirname "$(dirname "$(realpath "$0")")")"'
+  );
+  process.exit(1);
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SELECTOR = '[data-slide]';
@@ -17,6 +28,8 @@ const ANIMATION_KILL_CSS = `<style>/* html-flides animation kill */
   transition-delay: 0s !important;
   transition-duration: 0s !important;
 }
+/* hide known browser extension artifacts */
+plasmo-csui, [id^="plasmo"], [class^="plasmo"] { display: none !important; }
 </style>`;
 
 const FIGMA_CAPTURE_SCRIPT = '<script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>';
