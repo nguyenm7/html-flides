@@ -33,7 +33,7 @@ createServer(async (req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ plugin: 'html-flides', status: 'ok' }));
+    res.end(JSON.stringify({ plugin: 'html-flides', status: 'ok', root }));
     return;
   }
 
